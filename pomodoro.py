@@ -64,6 +64,10 @@ class timer:
         self.lunchTimerLabel = ctk.CTkButton(self.window, text = "15 min", fg_color = "transparent", command = self.triggerLunchTimer)
         self.lunchTimerLabel.pack()
 
+        # Create reset lunch timer button
+        self.resetLunchTimerButton = ctk.CTkButton(self.window, text = "Reset", command = self.resetLunchTimer)
+        self.resetLunchTimerButton.pack()
+
         # Show alert if timer is not working
         self.bother()
         
@@ -212,4 +216,6 @@ class timer:
 
         self.window.after(1000, self.updateLunchTimer)
 
+    def resetLunchTimer(self):
+        self.lunchTime = lunchTime
 timer()
