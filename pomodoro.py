@@ -11,17 +11,25 @@ focusTime = 2 * 60
 breakTime = 1 * 60
 pomodoroCounter = 1
 
+lunchTime = 1 * 60
+
 class timer:
     def __init__(self):
         # Import global variables to this local scope
         self.focusTime = focusTime
         self.pomodoroCounter = pomodoroCounter
 
-        # Set initial conditions
+        self.lunchTime = lunchTime
+
+        # Set initial conditions for pomodoro timer
         self.isTimerRunning = False
         self.isFocusTime = True
         self.isBreakTime = False
         self.isFirstTimePressed = True
+
+        # Set initial conditions for lunch timer
+        self.isLunchTimerRunning = False
+        self.isFirstTimePressedLunch = True
 
         # Define window
         self.window = ctk.CTk()
@@ -51,6 +59,10 @@ class timer:
         # Create pomodoro counter
         self.timerResetPomodoroCounterButton = ctk.CTkButton(self.timerButtonsFrame, text = "Reset pomodoros", width = 100, command = self.resetPomodoroCounter)
         self.timerResetPomodoroCounterButton.pack(side = "left", padx = 2.5)
+
+        # Create lunch timer label
+        self.lunchTimerLabel = ctk.CTkButton(self.window, text = "15 min", fg_color = "transparent", command = self.triggerLunchTimer)
+        self.lunchTimerLabel.pack()
 
         # Show alert if timer is not working
         self.bother()
@@ -175,5 +187,29 @@ class timer:
 
     def resetPomodoroCounter(self):
         self.pomodoroCounter = pomodoroCounter
+
+    def triggerLunchTimer(self):
+        # Same logic as triggerTimer function
+        if self.isLunchTimerRunning == False:
+            self.isLunchTimerRunning = True
+
+            if self.isFirstTimePressedLunch == True:
+                self.updateLunchTimer()
+        else:
+            self.isLunchTimerRunning = False
+
+    def updateLunchTimer(self):
+        # Same logic as updateTimer function
+        if self.isLunchTimerRunning == True:
+            self.isFirstTimePressedLunch = False
+            
+            self.lunchTime -= 10
+            self.lunchMinutes, self.lunchSeconds = divmod(self.lunchTime, 60)
+            self.lunchTimerLabel.configure(text = "{:02d}:{:02d}".format(self.lunchMinutes, self.lunchSeconds))
+
+            if self.lunchTime == 0:
+                self.isLunchTimerRunning = False
+
+        self.window.after(1000, self.updateLunchTimer)
 
 timer()
