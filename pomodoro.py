@@ -178,6 +178,10 @@ class timer:
         
     def bother(self):
         if self.isTimerRunning == False:
+            if self.isLunchTimerRunning == True:
+                # If lunch timer is working, simulate that pomodoro timer is too
+                self.isTimerRunning = True
+                
             # Set the window as "always on top" and annoy user when switching to other apps without starting the timer
             self.window.attributes("-topmost", True)
             self.window.bind("<FocusOut>", lambda event: messagebox.showerror(message = "Start a timer"))
