@@ -218,6 +218,10 @@ class timer:
             if self.lunchTime == 0:
                 self.isLunchTimerRunning = False
 
+                self.window.state(newstate = "normal")
+                self.window.attributes("-topmost", True)
+                messagebox.showerror(message = "Stop what you're doing RIGHT NOW!")
+
         self.window.after(1000, self.updateLunchTimer)
 
     def resetLunchTimer(self):
