@@ -217,6 +217,8 @@ class timer:
 
             if self.lunchTime == 0:
                 self.isLunchTimerRunning = False
+                # Stop pretending that pomodoro timer is working (revert simulation made in bother function)
+                self.isTimerRunning = False
 
                 self.window.state(newstate = "normal")
                 self.window.attributes("-topmost", True)
