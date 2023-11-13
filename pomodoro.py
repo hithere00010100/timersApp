@@ -11,7 +11,7 @@ focusTime = 35 * 60
 breakTime = 10 * 60
 pomodoroCounter = 1
 
-lunchTime = 1 * 60
+lunchTime = 15 * 60
 
 class timer:
     def __init__(self):
