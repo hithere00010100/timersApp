@@ -7,8 +7,8 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
 
 # Set timer's variables
-focusTime = 2 * 60
-breakTime = 1 * 60
+focusTime = 35 * 60
+breakTime = 10 * 60
 pomodoroCounter = 1
 
 lunchTime = 1 * 60
@@ -38,7 +38,7 @@ class timer:
 
         # Create timer triggerable label
         self.timerLabel = ctk.CTkButton(self.window, text = "Pomodoro", fg_color = "transparent", command = self.triggerTimer)
-        self.timerLabel.pack()
+        self.timerLabel.pack(pady = 5)
 
         # Create pomodoro counter label
         self.pomodoroCounterLabel = ctk.CTkLabel(self.window, text = "#")
@@ -62,7 +62,7 @@ class timer:
 
         # Create lunch timer label
         self.lunchTimerLabel = ctk.CTkButton(self.window, text = "15 min", fg_color = "transparent", command = self.triggerLunchTimer)
-        self.lunchTimerLabel.pack()
+        self.lunchTimerLabel.pack(pady = 20)
 
         # Create reset lunch timer button
         self.resetLunchTimerButton = ctk.CTkButton(self.window, text = "Reset", command = self.resetLunchTimer)
@@ -107,7 +107,7 @@ class timer:
         
         if self.isTimerRunning == True and self.isFocusTime == True:
             # Reduce focusTime and show updated timer if start button was pressed
-            self.focusTime -= 20
+            self.focusTime -= 1
             self.timerMinutes, self.timerSeconds = divmod(self.focusTime, 60)
             self.timerLabel.configure(text = "{:02d}:{:02d}".format(self.timerMinutes, self.timerSeconds))
             
@@ -143,7 +143,7 @@ class timer:
 
         elif self.isTimerRunning == True and self.isBreakTime == True:
             # Reduce breakTime and show updated timer if start button was pressed
-            self.breakTime -= 20
+            self.breakTime -= 1
             self.timerMinutes, self.timerSeconds = divmod(self.breakTime, 60)
             self.timerLabel.configure(text = "{:02d}:{:02d}".format(self.timerMinutes, self.timerSeconds))
 
@@ -211,7 +211,7 @@ class timer:
         if self.isLunchTimerRunning == True:
             self.isFirstTimePressedLunch = False
             
-            self.lunchTime -= 10
+            self.lunchTime -= 1
             self.lunchMinutes, self.lunchSeconds = divmod(self.lunchTime, 60)
             self.lunchTimerLabel.configure(text = "{:02d}:{:02d}".format(self.lunchMinutes, self.lunchSeconds))
 
