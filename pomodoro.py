@@ -26,6 +26,7 @@ class timer:
         self.isFocusTime = True
         self.isBreakTime = False
         self.isFirstTimePressed = True
+        self.isDoNotDisturbOn = False
 
         # Set initial conditions for lunch timer
         self.isLunchTimerRunning = False
@@ -76,11 +77,14 @@ class timer:
 
     def triggerTimer(self):
         if self.isTimerRunning == False:
-            # Start timer when do not disturb is on and start button is pressed
-            self.doNotDisturb = messagebox.showwarning(title = "Reminder",message = "Turn on do not disturb on the phone")
+            if self.isDoNotDisturbOn == False:
+                # Start timer when do not disturb is on and start button is pressed
+                self.alertReturnedValue = messagebox.showwarning(title = "Reminder",message = "Turn on do not disturb on the phone")
 
-            if self.doNotDisturb == "ok":
-                self.isTimerRunning = True
+                if self.alertReturnedValue == "ok":
+                    # Set isDoNotDisturbOn to True to show the alert only once
+                    self.isTimerRunning = True
+                    self.isDoNotDisturbOn = True
             
             # Make sure updateTimer is only executed once
             if self.isFirstTimePressed == True:
@@ -89,6 +93,7 @@ class timer:
         else:
             # Stop timer when stop button is pressed
             self.isTimerRunning = False
+            self.isDoNotDisturbOn = False
     
     def resetTimer(self):
         # Reset timer's variables
