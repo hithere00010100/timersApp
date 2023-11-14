@@ -110,73 +110,75 @@ class timer:
         # Show actual pomodoro
         self.pomodoroCounterLabel.configure(text = self.pomodoroCounter)
         
-        if self.isTimerRunning == True and self.isFocusTime == True:
-            # Reduce focusTime and show updated timer if start button was pressed
-            self.focusTime -= 1
-            self.timerMinutes, self.timerSeconds = divmod(self.focusTime, 60)
-            self.timerLabel.configure(text = "{:02d}:{:02d}".format(self.timerMinutes, self.timerSeconds))
-            
-            if self.focusTime == 0 or self.skipBlock == True:
-                # Stop counting, reset focusTime and skipBlock variable when time is over or skip button was pressed
-                self.isTimerRunning = False
-                self.focusTime = focusTime
-                self.skipBlock = False
-
-                # Show window and the alert
-                self.window.state(newstate = "normal")
-                self.window.attributes("-topmost", True)
-                self.timesOver = messagebox.showerror(message = "Do you want to start next block?", type = "yesno")
+        # Deactive pomodoro timer while lunch timer is on
+        if self.isLunchTimerRunning == False:
+            if self.isTimerRunning == True and self.isFocusTime == True:
+                # Reduce focusTime and show updated timer if start button was pressed
+                self.focusTime -= 1
+                self.timerMinutes, self.timerSeconds = divmod(self.focusTime, 60)
+                self.timerLabel.configure(text = "{:02d}:{:02d}".format(self.timerMinutes, self.timerSeconds))
                 
-                if(self.timesOver == "yes"):
-                    # Set breakTime conditions to start automatically
-                    self.isFocusTime = False
-                    self.isBreakTime = True
-                    self.isTimerRunning = True
-                
-                else:
-                    # Set breakTime conditions to start manually
-                    self.isFocusTime = False
-                    self.isBreakTime = True
+                if self.focusTime == 0 or self.skipBlock == True:
+                    # Stop counting, reset focusTime and skipBlock variable when time is over or skip button was pressed
                     self.isTimerRunning = False
+                    self.focusTime = focusTime
+                    self.skipBlock = False
 
-                # Set breakTime based on the actual pomodoro
-                if self.pomodoroCounter % 4 == 0:
-                    # If pomodoroCounter = (4, 8, 12, ...), breakTime is a long break
-                    self.breakTime = breakTime * 2
-                else:
+                    # Show window and the alert
+                    self.window.state(newstate = "normal")
+                    self.window.attributes("-topmost", True)
+                    self.timesOver = messagebox.showerror(message = "Do you want to start next block?", type = "yesno")
+                    
+                    if(self.timesOver == "yes"):
+                        # Set breakTime conditions to start automatically
+                        self.isFocusTime = False
+                        self.isBreakTime = True
+                        self.isTimerRunning = True
+                    
+                    else:
+                        # Set breakTime conditions to start manually
+                        self.isFocusTime = False
+                        self.isBreakTime = True
+                        self.isTimerRunning = False
+
+                    # Set breakTime based on the actual pomodoro
+                    if self.pomodoroCounter % 4 == 0:
+                        # If pomodoroCounter = (4, 8, 12, ...), breakTime is a long break
+                        self.breakTime = breakTime * 2
+                    else:
+                        self.breakTime = breakTime
+
+            elif self.isTimerRunning == True and self.isBreakTime == True:
+                # Reduce breakTime and show updated timer if start button was pressed
+                self.breakTime -= 1
+                self.timerMinutes, self.timerSeconds = divmod(self.breakTime, 60)
+                self.timerLabel.configure(text = "{:02d}:{:02d}".format(self.timerMinutes, self.timerSeconds))
+
+                if self.breakTime == 0 or self.skipBlock == True:
+                    # Stop counting, reset focusTime and skipBlock variable when time is over or skip button was pressed
+                    self.isTimerRunning = False
                     self.breakTime = breakTime
+                    self.skipBlock = False
 
-        elif self.isTimerRunning == True and self.isBreakTime == True:
-            # Reduce breakTime and show updated timer if start button was pressed
-            self.breakTime -= 1
-            self.timerMinutes, self.timerSeconds = divmod(self.breakTime, 60)
-            self.timerLabel.configure(text = "{:02d}:{:02d}".format(self.timerMinutes, self.timerSeconds))
+                    # Increment pomodoroCounter
+                    self.pomodoroCounter += 1
 
-            if self.breakTime == 0 or self.skipBlock == True:
-                # Stop counting, reset focusTime and skipBlock variable when time is over or skip button was pressed
-                self.isTimerRunning = False
-                self.breakTime = breakTime
-                self.skipBlock = False
+                    # Show window and the alert
+                    self.window.state(newstate = "normal")
+                    self.window.attributes("-topmost", True)
+                    self.timesOver = messagebox.showerror(message = "Do you want to start next block?", type = "yesno")
 
-                # Increment pomodoroCounter
-                self.pomodoroCounter += 1
-
-                # Show window and the alert
-                self.window.state(newstate = "normal")
-                self.window.attributes("-topmost", True)
-                self.timesOver = messagebox.showerror(message = "Do you want to start next block?", type = "yesno")
-
-                if(self.timesOver == "yes"):
-                    # Set focusTime conditions to start automatically
-                    self.isFocusTime = True
-                    self.isBreakTime = False
-                    self.isTimerRunning = True
-                
-                else:
-                    # Set focusTime conditions to start manually
-                    self.isFocusTime = False
-                    self.isBreakTime = True
-                    self.isTimerRunning = False
+                    if(self.timesOver == "yes"):
+                        # Set focusTime conditions to start automatically
+                        self.isFocusTime = True
+                        self.isBreakTime = False
+                        self.isTimerRunning = True
+                    
+                    else:
+                        # Set focusTime conditions to start manually
+                        self.isFocusTime = False
+                        self.isBreakTime = True
+                        self.isTimerRunning = False
         
         # Execute updateTimer every second
         self.window.after(1000, self.updateTimer)
@@ -233,4 +235,5 @@ class timer:
 
     def resetLunchTimer(self):
         self.lunchTime = lunchTime
+        
 timer()
