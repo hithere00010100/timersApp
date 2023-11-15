@@ -127,7 +127,7 @@ class timer:
                     # Show window and the alert
                     self.window.state(newstate = "normal")
                     self.window.attributes("-topmost", True)
-                    self.timesOver = messagebox.showerror(message = "Do you want to start next block?", type = "yesno")
+                    self.timesOver = messagebox.showerror(message = "Check phone, exercise, read or get ahead on due stuff", type = "yesno")
                     
                     if(self.timesOver == "yes"):
                         # Set breakTime conditions to start automatically
@@ -166,7 +166,7 @@ class timer:
                     # Show window and the alert
                     self.window.state(newstate = "normal")
                     self.window.attributes("-topmost", True)
-                    self.timesOver = messagebox.showerror(message = "Do you want to start next block?", type = "yesno")
+                    self.timesOver = messagebox.showerror(message = "Let's focus", type = "yesno")
 
                     if(self.timesOver == "yes"):
                         # Set focusTime conditions to start automatically
