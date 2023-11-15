@@ -127,24 +127,19 @@ class timer:
                     # Show window and the alert
                     self.window.state(newstate = "normal")
                     self.window.attributes("-topmost", True)
-                    self.timesOver = messagebox.showerror(message = "Check phone, exercise, read or get ahead on due stuff", type = "yesno")
+                    self.timesOver = messagebox.showerror(message = "Check phone, exercise, read or get ahead on due stuff", type = "ok")
                     
-                    if(self.timesOver == "yes"):
+                    if(self.timesOver == "ok"):
                         # Set breakTime conditions to start automatically
                         self.isFocusTime = False
                         self.isBreakTime = True
                         self.isTimerRunning = True
-                    
-                    else:
-                        # Set breakTime conditions to start manually
-                        self.isFocusTime = False
-                        self.isBreakTime = True
-                        self.isTimerRunning = False
 
                     # Set breakTime based on the actual pomodoro
                     if self.pomodoroCounter % 4 == 0:
                         # If pomodoroCounter = (4, 8, 12, ...), breakTime is a long break
                         self.breakTime = breakTime * 2
+                        
                     else:
                         self.breakTime = breakTime
 
@@ -166,19 +161,13 @@ class timer:
                     # Show window and the alert
                     self.window.state(newstate = "normal")
                     self.window.attributes("-topmost", True)
-                    self.timesOver = messagebox.showerror(message = "Let's focus", type = "yesno")
+                    self.timesOver = messagebox.showerror(message = "Let's focus", type = "ok")
 
-                    if(self.timesOver == "yes"):
+                    if(self.timesOver == "ok"):
                         # Set focusTime conditions to start automatically
                         self.isFocusTime = True
                         self.isBreakTime = False
                         self.isTimerRunning = True
-                    
-                    else:
-                        # Set focusTime conditions to start manually
-                        self.isFocusTime = False
-                        self.isBreakTime = True
-                        self.isTimerRunning = False
         
         # Execute updateTimer every second
         self.window.after(1000, self.updateTimer)
