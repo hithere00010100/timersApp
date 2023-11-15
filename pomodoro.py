@@ -111,7 +111,7 @@ class timer:
                 self.timerLabel.configure(text = "{:02d}:{:02d}".format(self.timerMinutes, self.timerSeconds))
                 
                 if self.focusTime == 0 or self.skipBlock == True:
-                    # Stop counting, reset focusTime and skipBlock variable when time is over or skip button was pressed
+                    # Stop timer, reset focusTime and skipBlock
                     self.isTimerRunning = False
                     self.focusTime = focusTime
                     self.skipBlock = False
@@ -121,17 +121,15 @@ class timer:
                     self.window.attributes("-topmost", True)
                     self.timesOver = messagebox.showerror(message = "Check phone, exercise, read or get ahead on due stuff", type = "ok")
                     
+                    # If alert ok button was pressed, set breakTime conditions
                     if(self.timesOver == "ok"):
-                        # Set breakTime conditions to start automatically
                         self.isFocusTime = False
                         self.isBreakTime = True
                         self.isTimerRunning = True
 
-                    # Set breakTime based on the actual pomodoro
+                    # If pomodoros are 4, 8, 12, ... take a long break, else take a short break
                     if self.pomodoroCounter % 4 == 0:
-                        # If pomodoroCounter = (4, 8, 12, ...), breakTime is a long break
                         self.breakTime = breakTime * 2
-                        
                     else:
                         self.breakTime = breakTime
 
@@ -142,7 +140,7 @@ class timer:
                 self.timerLabel.configure(text = "{:02d}:{:02d}".format(self.timerMinutes, self.timerSeconds))
 
                 if self.breakTime == 0 or self.skipBlock == True:
-                    # Stop counting, reset focusTime and skipBlock variable when time is over or skip button was pressed
+                    # Stop timer, reset breakTime and skipBlock
                     self.isTimerRunning = False
                     self.breakTime = breakTime
                     self.skipBlock = False
@@ -155,8 +153,8 @@ class timer:
                     self.window.attributes("-topmost", True)
                     self.timesOver = messagebox.showerror(message = "Let's focus", type = "ok")
 
+                    # If alert ok button was pressed, set focusTime conditions
                     if(self.timesOver == "ok"):
-                        # Set focusTime conditions to start automatically
                         self.isFocusTime = True
                         self.isBreakTime = False
                         self.isTimerRunning = True
@@ -193,18 +191,20 @@ class timer:
             self.isFirstTimePressedLunch = False
             
             self.lunchTime -= 1
-            self.lunchMinutes, self.lunchSeconds = divmod(self.lunchTime, 60)
-            self.lunchTimerLabel.configure(text = "{:02d}:{:02d}".format(self.lunchMinutes, self.lunchSeconds))
 
             if self.lunchTime == 0:
                 self.isLunchTimerRunning = False
-                # Stop pretending that pomodoro timer is working (revert simulation made in bother function)
-                self.isTimerRunning = False
 
                 self.window.state(newstate = "normal")
                 self.window.attributes("-topmost", True)
-                messagebox.showerror(message = "Stop what you're doing RIGHT NOW!")
+                self.lunchAlert = messagebox.showerror(message = "Stop what you're doing RIGHT NOW!")
 
+                if self.lunchAlert == "ok":
+                    self.lunchTime = lunchTime
+
+            self.lunchMinutes, self.lunchSeconds = divmod(self.lunchTime, 60)
+            self.lunchTimerLabel.configure(text = "{:02d}:{:02d}".format(self.lunchMinutes, self.lunchSeconds))
+        
         self.window.after(1000, self.updateLunchTimer)
 
     def resetLunchTimer(self):
