@@ -12,14 +12,13 @@ breakTime = 10 * 60
 pomodoroCounter = 1
 
 lunchTime = 15 * 60
+notLunchTime = 10 * 60
 
 class timer:
     def __init__(self):
         # Import global variables to this local scope
         self.focusTime = focusTime
         self.pomodoroCounter = pomodoroCounter
-
-        self.lunchTime = lunchTime
 
         # Set initial conditions for pomodoro timer
         self.isTimerRunning = False
@@ -33,7 +32,7 @@ class timer:
 
         # Define window
         self.window = ctk.CTk()
-        self.window.geometry("350x200")
+        self.window.geometry("350x250")
         self.window.title("TimersApp")
 
         # Create timer triggerable label
@@ -64,6 +63,17 @@ class timer:
         self.lunchTimerLabel = ctk.CTkButton(self.window, text = "Start/stop", fg_color = "transparent", command = self.triggerLunchTimer)
         self.lunchTimerLabel.pack(pady = 20)
 
+        # Create change timer switch
+        self.switchState = tk.BooleanVar()
+
+        self.changeLunchTimerSwitch = ctk.CTkSwitch(self.window,
+                                                    text = "Breakfast/dinner",
+                                                    variable = self.switchState,
+                                                    onvalue = True,
+                                                    offvalue = False,
+                                                    command = self.changeLunchTimer)
+        self.changeLunchTimerSwitch.pack(pady = 5)
+        
         # Create reset lunch timer button
         self.resetLunchTimerButton = ctk.CTkButton(self.window, text = "Reset", command = self.resetLunchTimer)
         self.resetLunchTimerButton.pack()
@@ -209,5 +219,12 @@ class timer:
 
     def resetLunchTimer(self):
         self.lunchTime = lunchTime
-        
+
+    def changeLunchTimer(self):
+        # Set eating time according to switch state
+        if self.switchState.get() == True:
+            self.lunchTime = notLunchTime
+        else:
+            self.lunchTime = lunchTime
+            
 timer()
