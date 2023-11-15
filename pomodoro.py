@@ -165,16 +165,11 @@ class timer:
         self.window.after(1000, self.updateTimer)
         
     def bother(self):
-        # If no timer is running, show reminder every minute
+        # If no timer is running, show window and reminder every minute
         if self.isTimerRunning == False and self.isLunchTimerRunning == False:
-            # Show window and put it always on top
             self.window.state(newstate = "normal")
             self.window.attributes("-topmost", True)
             messagebox.showerror(message = "Turn on DND and start a timer")
-
-        # If at least one timer is running, hide window and put it on the background
-        else:
-            self.window.state(newstate = "iconic")
             self.window.attributes("-topmost", False)
 
         self.window.after(60000, self.bother)
