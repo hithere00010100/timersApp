@@ -35,10 +35,10 @@ class timer:
         # Define window
         self.window = ctk.CTk()
         self.window.geometry("350x200")
-        self.window.title("PomodoroApp")
+        self.window.title("TimersApp")
 
         # Create timer triggerable label
-        self.timerLabel = ctk.CTkButton(self.window, text = "Pomodoro", fg_color = "transparent", command = self.triggerTimer)
+        self.timerLabel = ctk.CTkButton(self.window, text = "Start/stop", fg_color = "transparent", command = self.triggerTimer)
         self.timerLabel.pack(pady = 5)
 
         # Create pomodoro counter label
@@ -50,7 +50,7 @@ class timer:
         self.timerButtonsFrame.pack()
 
         # Create timer reset button
-        self.timerResetButton = ctk.CTkButton(self.timerButtonsFrame, text = "Reset timer", width = 100, command = self.resetTimer)
+        self.timerResetButton = ctk.CTkButton(self.timerButtonsFrame, text = "Reset", width = 100, command = self.resetTimer)
         self.timerResetButton.pack(side = "left", padx = 2.5)
 
         # Create timer skip button
@@ -58,11 +58,11 @@ class timer:
         self.timerSkipButton.pack(side = "left", padx = 2.5)
 
         # Create pomodoro counter
-        self.timerResetPomodoroCounterButton = ctk.CTkButton(self.timerButtonsFrame, text = "Reset pomodoros", width = 100, command = self.resetPomodoroCounter)
+        self.timerResetPomodoroCounterButton = ctk.CTkButton(self.timerButtonsFrame, text = "Reset", width = 100, command = self.resetPomodoroCounter)
         self.timerResetPomodoroCounterButton.pack(side = "left", padx = 2.5)
 
         # Create lunch timer label
-        self.lunchTimerLabel = ctk.CTkButton(self.window, text = "15 min", fg_color = "transparent", command = self.triggerLunchTimer)
+        self.lunchTimerLabel = ctk.CTkButton(self.window, text = "Start/stop", fg_color = "transparent", command = self.triggerLunchTimer)
         self.lunchTimerLabel.pack(pady = 20)
 
         # Create reset lunch timer button
