@@ -26,7 +26,6 @@ class timer:
         self.isFocusTime = True
         self.isBreakTime = False
         self.isFirstTimePressed = True
-        self.isDoNotDisturbOn = False
 
         # Set initial conditions for lunch timer
         self.isLunchTimerRunning = False
@@ -76,15 +75,9 @@ class timer:
         self.window.mainloop()
 
     def triggerTimer(self):
+        # Start timer when start button is pressed
         if self.isTimerRunning == False:
-            if self.isDoNotDisturbOn == False:
-                # Start timer when do not disturb is on and start button is pressed
-                self.alertReturnedValue = messagebox.showwarning(title = "Reminder",message = "Turn on do not disturb on the phone")
-
-                if self.alertReturnedValue == "ok":
-                    # Set isDoNotDisturbOn to True to show the alert only once
-                    self.isTimerRunning = True
-                    self.isDoNotDisturbOn = True
+            self.isTimerRunning = True
             
             # Make sure updateTimer is only executed once
             if self.isFirstTimePressed == True:
@@ -93,7 +86,6 @@ class timer:
         else:
             # Stop timer when stop button is pressed
             self.isTimerRunning = False
-            self.isDoNotDisturbOn = False
     
     def resetTimer(self):
         # Reset timer's variables
@@ -173,21 +165,19 @@ class timer:
         self.window.after(1000, self.updateTimer)
         
     def bother(self):
-        if self.isTimerRunning == False:
-            if self.isLunchTimerRunning == True:
-                # If lunch timer is working, simulate that pomodoro timer is too
-                self.isTimerRunning = True
-                
-            # Set the window as "always on top" and annoy user when switching to other apps without starting the timer
+        # If no timer is running, show reminder every minute
+        if self.isTimerRunning == False and self.isLunchTimerRunning == False:
+            # Show window and put it always on top
+            self.window.state(newstate = "normal")
             self.window.attributes("-topmost", True)
-            self.window.bind("<FocusOut>", lambda event: messagebox.showerror(message = "Start a timer"))
-        
-        else:
-            self.window.attributes("-topmost", False)
-            self.window.unbind("<FocusOut>")
+            messagebox.showerror(message = "Turn on DND and start a timer")
 
-        # Execute bother every second
-        self.window.after(1000, self.bother)
+        # If at least one timer is running, hide window and put it on the background
+        else:
+            self.window.state(newstate = "iconic")
+            self.window.attributes("-topmost", False)
+
+        self.window.after(60000, self.bother)
 
     def resetPomodoroCounter(self):
         self.pomodoroCounter = pomodoroCounter
