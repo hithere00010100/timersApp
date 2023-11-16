@@ -2,182 +2,146 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
 
-# Set theme appearance
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
 
-# Set timer's variables
 focusTime = 35 * 60
 breakTime = 10 * 60
-pomodoroCounter = 1
+pomodoroTimerCounter = 1
 
 lunchTime = 15 * 60
-notLunchTime = 10 * 60
+dinnerTime = 10 * 60
 
 class timer:
     def __init__(self):
-        # Import global variables to this local scope
         self.focusTime = focusTime
-        self.pomodoroCounter = pomodoroCounter
+        self.pomodoroTimerCounter = pomodoroTimerCounter
 
-        # Set initial conditions for pomodoro timer
-        self.isTimerRunning = False
+        self.isPomodoroTimerRunning = False
         self.isFocusTime = True
         self.isBreakTime = False
-        self.isFirstTimePressed = True
+        self.isPomodoroTimerFirstTime = True
+        self.skipPomodoroTimer = False
 
-        # Set initial conditions for breakfast/dinner or lunch timer
-        self.isLunchTimerRunning = False
-        self.isFirstTimePressedLunch = True
+        self.isEatingTimerRunning = False
+        self.isEatingTimerFirstTime = True
 
-        # Define window
         self.window = ctk.CTk()
         self.window.geometry("350x250")
         self.window.title("TimersApp")
 
-        # Create timer triggerable label
-        self.timerLabel = ctk.CTkButton(self.window, text = "Start/stop", fg_color = "transparent", command = self.triggerTimer)
-        self.timerLabel.pack(pady = 5)
+        self.pomodoroTimerLabel = ctk.CTkButton(self.window, text = "Start/stop", fg_color = "transparent", command = self.triggerPomodoroTimer)
+        self.pomodoroTimerLabel.pack(pady = 5)
 
-        # Create pomodoro counter label
-        self.pomodoroCounterLabel = ctk.CTkLabel(self.window, text = "#")
-        self.pomodoroCounterLabel.pack()
+        self.pomodoroTimerCounterLabel = ctk.CTkLabel(self.window, text = "#")
+        self.pomodoroTimerCounterLabel.pack()
 
-        # Create timer buttons frame
-        self.timerButtonsFrame = ctk.CTkFrame(self.window)
-        self.timerButtonsFrame.pack()
+        self.pomodoroTimerButtonsFrame = ctk.CTkFrame(self.window)
+        self.pomodoroTimerButtonsFrame.pack()
 
-        # Create timer reset button
-        self.timerResetButton = ctk.CTkButton(self.timerButtonsFrame, text = "Reset", width = 100, command = self.resetTimer)
-        self.timerResetButton.pack(side = "left", padx = 2.5)
+        self.pomodoroTimerResetButton = ctk.CTkButton(self.pomodoroTimerButtonsFrame, text = "Reset", width = 100, command = self.resetPomodoroTimer)
+        self.pomodoroTimerResetButton.pack(side = "left", padx = 2.5)
 
-        # Create timer skip button
-        self.timerSkipButton = ctk.CTkButton(self.timerButtonsFrame, text = "Skip", width = 100, command = self.skipBlock)
-        self.timerSkipButton.pack(side = "left", padx = 2.5)
+        self.pomodoroTimerSkipButton = ctk.CTkButton(self.pomodoroTimerButtonsFrame, text = "Skip", width = 100, command = self.skipPomodoroTimerBlock)
+        self.pomodoroTimerSkipButton.pack(side = "left", padx = 2.5)
 
-        # Create pomodoro counter
-        self.timerResetPomodoroCounterButton = ctk.CTkButton(self.timerButtonsFrame, text = "Reset", width = 100, command = self.resetPomodoroCounter)
-        self.timerResetPomodoroCounterButton.pack(side = "left", padx = 2.5)
+        self.pomodoroTimerResetCounterButton = ctk.CTkButton(self.pomodoroTimerButtonsFrame, text = "Reset", width = 100, command = self.resetPomodoroTimerCounter)
+        self.pomodoroTimerResetCounterButton.pack(side = "left", padx = 2.5)
 
-        # Create lunch timer label
-        self.lunchTimerLabel = ctk.CTkButton(self.window, text = "Start/stop", fg_color = "transparent", command = self.triggerLunchTimer)
-        self.lunchTimerLabel.pack(pady = 20)
+        self.eatingTimerLabel = ctk.CTkButton(self.window, text = "Start/stop", fg_color = "transparent", command = self.triggerEatingTimer)
+        self.eatingTimerLabel.pack(pady = 20)
 
-        # Create change timer switch
-        self.switchState = tk.BooleanVar()
+        self.eatingTimerSwitchState = tk.BooleanVar()
 
-        self.setEatingTimerSwitch = ctk.CTkSwitch(self.window,
+        self.eatingTimerChangeModeSwitch = ctk.CTkSwitch(self.window,
                                                     text = "Breakfast/dinner",
-                                                    variable = self.switchState,
+                                                    variable = self.eatingTimerSwitchState,
                                                     onvalue = True,
                                                     offvalue = False,
-                                                    command = self.resetLunchTimer)
-        self.setEatingTimerSwitch.pack(pady = 5)
+                                                    command = self.resetEatingTimer)
+        self.eatingTimerChangeModeSwitch.pack(pady = 5)
         
-        # Initialize lunchTime or dinnerTime according to the switch state
-        self.resetLunchTimer()
+        self.resetEatingTimer()
         
-        # Create reset lunch timer button
-        self.resetLunchTimerButton = ctk.CTkButton(self.window, text = "Reset", command = self.resetLunchTimer)
-        self.resetLunchTimerButton.pack()
+        self.eatingTimerResetButton = ctk.CTkButton(self.window, text = "Reset", command = self.resetEatingTimer)
+        self.eatingTimerResetButton.pack()
 
-        # Show alert if timer is not working
         self.bother()
         
-        # Run window
         self.window.mainloop()
 
-    def triggerTimer(self):
-        # Start timer when start button is pressed
-        if self.isTimerRunning == False:
-            self.isTimerRunning = True
+    def triggerPomodoroTimer(self):
+        if self.isPomodoroTimerRunning == False:
+            self.isPomodoroTimerRunning = True
             
-            # Make sure updateTimer is only executed once
-            if self.isFirstTimePressed == True:
-                self.updateTimer()
+            if self.isPomodoroTimerFirstTime == True:
+                self.updatePomodoroTimer()
         
         else:
-            # Stop timer when stop button is pressed
-            self.isTimerRunning = False
+            self.isPomodoroTimerRunning = False
     
-    def resetTimer(self):
-        # Reset timer's variables
+    def resetPomodoroTimer(self):
         self.focusTime = focusTime
         self.breakTime = breakTime
 
-    def skipBlock(self):
-        # Go to the next timer
-        self.skipBlock = True
+    def skipPomodoroTimerBlock(self):
+        self.skipPomodoroTimer = True
 
-    def updateTimer(self):
-        # Update isFirstTimePressed to avoid double updateTimer executions
-        self.isFirstTimePressed = False
-        # Show actual pomodoro
-        self.pomodoroCounterLabel.configure(text = self.pomodoroCounter)
+    def updatePomodoroTimer(self):
+        self.isPomodoroTimerFirstTime = False
+        self.pomodoroTimerCounterLabel.configure(text = self.pomodoroTimerCounter)
         
-        # Deactive pomodoro timer while lunch timer is on
-        if self.isLunchTimerRunning == False:
-            if self.isTimerRunning == True and self.isFocusTime == True:
-                # Reduce focusTime and show updated timer if start button was pressed
+        if self.isEatingTimerRunning == False:
+            if self.isPomodoroTimerRunning == True and self.isFocusTime == True:
                 self.focusTime -= 1
-                self.timerMinutes, self.timerSeconds = divmod(self.focusTime, 60)
-                self.timerLabel.configure(text = "{:02d}:{:02d}".format(self.timerMinutes, self.timerSeconds))
+                self.pomodoroTimerMinutes, self.pomodoroTimerSeconds = divmod(self.focusTime, 60)
+                self.pomodoroTimerLabel.configure(text = "{:02d}:{:02d}".format(self.pomodoroTimerMinutes, self.pomodoroTimerSeconds))
                 
-                if self.focusTime == 0 or self.skipBlock == True:
-                    # Stop timer, reset focusTime and skipBlock
-                    self.isTimerRunning = False
+                if self.focusTime == 0 or self.skipPomodoroTimer == True:
+                    self.isPomodoroTimerRunning = False
                     self.focusTime = focusTime
-                    self.skipBlock = False
+                    self.skipPomodoroTimer = False
 
-                    # Show window and the alert
                     self.window.state(newstate = "normal")
                     self.window.attributes("-topmost", True)
-                    self.timesOver = messagebox.showerror(message = "Check phone, exercise, read or get ahead on due stuff", type = "ok")
+                    self.alertReturn = messagebox.showerror(message = "Check phone, exercise, read or get ahead on due stuff", type = "ok")
                     
-                    # If alert ok button was pressed, set breakTime conditions
-                    if(self.timesOver == "ok"):
+                    if(self.alertReturn == "ok"):
                         self.isFocusTime = False
                         self.isBreakTime = True
-                        self.isTimerRunning = True
+                        self.isPomodoroTimerRunning = True
 
-                    # If pomodoros are 4, 8, 12, ... take a long break, else take a short break
-                    if self.pomodoroCounter % 4 == 0:
+                    if self.pomodoroTimerCounter % 4 == 0:
                         self.breakTime = breakTime * 2
+
                     else:
                         self.breakTime = breakTime
 
-            elif self.isTimerRunning == True and self.isBreakTime == True:
-                # Reduce breakTime and show updated timer if start button was pressed
+            elif self.isPomodoroTimerRunning == True and self.isBreakTime == True:
                 self.breakTime -= 1
-                self.timerMinutes, self.timerSeconds = divmod(self.breakTime, 60)
-                self.timerLabel.configure(text = "{:02d}:{:02d}".format(self.timerMinutes, self.timerSeconds))
+                self.pomodoroTimerMinutes, self.pomodoroTimerSeconds = divmod(self.breakTime, 60)
+                self.pomodoroTimerLabel.configure(text = "{:02d}:{:02d}".format(self.pomodoroTimerMinutes, self.pomodoroTimerSeconds))
 
-                if self.breakTime == 0 or self.skipBlock == True:
-                    # Stop timer, reset breakTime and skipBlock
-                    self.isTimerRunning = False
+                if self.breakTime == 0 or self.skipPomodoroTimer == True:
+                    self.isPomodoroTimerRunning = False
                     self.breakTime = breakTime
-                    self.skipBlock = False
+                    self.skipPomodoroTimer = False
 
-                    # Increment pomodoroCounter
-                    self.pomodoroCounter += 1
+                    self.pomodoroTimerCounter += 1
 
-                    # Show window and the alert
                     self.window.state(newstate = "normal")
                     self.window.attributes("-topmost", True)
-                    self.timesOver = messagebox.showerror(message = "Let's focus", type = "ok")
+                    self.alertReturn = messagebox.showerror(message = "Let's focus", type = "ok")
 
-                    # If alert ok button was pressed, set focusTime conditions
-                    if(self.timesOver == "ok"):
+                    if(self.alertReturn == "ok"):
                         self.isFocusTime = True
                         self.isBreakTime = False
-                        self.isTimerRunning = True
+                        self.isPomodoroTimerRunning = True
         
-        # Execute updateTimer every second
-        self.window.after(1000, self.updateTimer)
+        self.window.after(1000, self.updatePomodoroTimer)
         
     def bother(self):
-        # If no timer is running, show window and reminder every minute
-        if self.isTimerRunning == False and self.isLunchTimerRunning == False:
+        if self.isPomodoroTimerRunning == False and self.isEatingTimerRunning == False:
             self.window.state(newstate = "normal")
             self.window.attributes("-topmost", True)
             messagebox.showerror(message = "Turn on DND and start a timer")
@@ -185,47 +149,43 @@ class timer:
 
         self.window.after(60000, self.bother)
 
-    def resetPomodoroCounter(self):
-        self.pomodoroCounter = pomodoroCounter
+    def resetPomodoroTimerCounter(self):
+        self.pomodoroTimerCounter = pomodoroTimerCounter
 
-    def triggerLunchTimer(self):
-        # Same logic as triggerTimer function
-        if self.isLunchTimerRunning == False:
-            self.isLunchTimerRunning = True
+    def triggerEatingTimer(self):
+        if self.isEatingTimerRunning == False:
+            self.isEatingTimerRunning = True
 
-            if self.isFirstTimePressedLunch == True:
-                self.updateLunchTimer()
+            if self.isEatingTimerFirstTime == True:
+                self.updateEatingTimer()
         else:
-            self.isLunchTimerRunning = False
+            self.isEatingTimerRunning = False
 
-    def updateLunchTimer(self):
-        # Same logic as updateTimer function
-        if self.isLunchTimerRunning == True:
-            self.isFirstTimePressedLunch = False
+    def updateEatingTimer(self):
+        if self.isEatingTimerRunning == True:
+            self.isEatingTimerFirstTime = False
             
-            self.lunchTime -= 1
+            self.eatingTime -= 1
 
-            if self.lunchTime == 0:
-                self.isLunchTimerRunning = False
+            if self.eatingTime == 0:
+                self.isEatingTimerRunning = False
 
                 self.window.state(newstate = "normal")
                 self.window.attributes("-topmost", True)
-                self.lunchAlert = messagebox.showerror(message = "Stop what you're doing RIGHT NOW!")
+                self.alertReturn = messagebox.showerror(message = "Stop what you're doing RIGHT NOW!")
 
-                if self.lunchAlert == "ok":
-                    # Reset breakfast, lunch or dinner timer
-                    self.resetLunchTimer()
+                if self.alertReturn == "ok":
+                    self.resetEatingTimer()
 
-            self.lunchMinutes, self.lunchSeconds = divmod(self.lunchTime, 60)
-            self.lunchTimerLabel.configure(text = "{:02d}:{:02d}".format(self.lunchMinutes, self.lunchSeconds))
+            self.eatingTimerMinutes, self.eatingTimerSeconds = divmod(self.eatingTime, 60)
+            self.eatingTimerLabel.configure(text = "{:02d}:{:02d}".format(self.eatingTimerMinutes, self.eatingTimerSeconds))
         
-        self.window.after(1000, self.updateLunchTimer)
+        self.window.after(1000, self.updateEatingTimer)
 
-    def resetLunchTimer(self):
-        # Set eating time according to switch state
-        if self.switchState.get() == True:
-            self.lunchTime = notLunchTime
+    def resetEatingTimer(self):
+        if self.eatingTimerSwitchState.get() == True:
+            self.eatingTime = dinnerTime
         else:
-            self.lunchTime = lunchTime
+            self.eatingTime = lunchTime
             
 timer()
