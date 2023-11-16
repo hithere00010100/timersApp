@@ -190,6 +190,9 @@ class timer:
         self.pomodoroTimerCounter = pomodoroTimerCounter
 
     def triggerEatingTimer(self):
+        # Stop pomodoro timer when the button is pressed
+        self.isPomodoroTimerRunning = False
+
         # Run eating timer when start/stop button is pressed or stop it if it's already running
         if self.isEatingTimerRunning == False:
             self.isEatingTimerRunning = True
