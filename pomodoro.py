@@ -210,7 +210,8 @@ class timer:
                 self.lunchAlert = messagebox.showerror(message = "Stop what you're doing RIGHT NOW!")
 
                 if self.lunchAlert == "ok":
-                    self.lunchTime = lunchTime
+                    # Reset breakfast, lunch or dinner timer
+                    self.changeLunchTimer()
 
             self.lunchMinutes, self.lunchSeconds = divmod(self.lunchTime, 60)
             self.lunchTimerLabel.configure(text = "{:02d}:{:02d}".format(self.lunchMinutes, self.lunchSeconds))
