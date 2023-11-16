@@ -105,6 +105,20 @@ class timer:
         self.focusTime = focusTime
         self.breakTime = breakTime
 
+        # Show updated timer when resetted according to pomodoro timer block
+        if self.isFocusTime == True:
+            self.pomodoroTimerMinutes, self.pomodoroTimerSeconds = divmod(self.focusTime, 60)
+            self.pomodoroTimerLabel.configure(text = "{:02d}:{:02d}".format(self.pomodoroTimerMinutes, self.pomodoroTimerSeconds))
+        else:
+            # Assign break time according to pomodoro timer counter
+            if self.pomodoroTimerCounter % 4 == 0:
+                self.breakTime = breakTime * 2
+            else:
+                self.breakTime = breakTime
+            
+            self.pomodoroTimerMinutes, self.pomodoroTimerSeconds = divmod(self.breakTime, 60)
+            self.pomodoroTimerLabel.configure(text = "{:02d}:{:02d}".format(self.pomodoroTimerMinutes, self.pomodoroTimerSeconds))
+
     def skipPomodoroTimerBlock(self):
         # Show a flag when skip button is pressed
         self.skipPomodoroTimer = True
@@ -235,5 +249,10 @@ class timer:
             self.eatingTime = dinnerTime
         else:
             self.eatingTime = lunchTime
+
+        # Show updated timer when resetted
+        self.eatingTimerMinutes, self.eatingTimerSeconds = divmod(self.eatingTime, 60)
+        self.eatingTimerLabel.configure(text = "{:02d}:{:02d}".format(self.eatingTimerMinutes, self.eatingTimerSeconds))
+        
             
 timer()
