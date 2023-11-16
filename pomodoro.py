@@ -7,13 +7,13 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
 
 # Assign pomodoro timer times
-focusTime = 2 * 60
-breakTime = 1 * 60
+focusTime = 35 * 60
+breakTime = 10 * 60
 pomodoroTimerCounter = 1
 
 # Assign eating timer times
-lunchTime = 2 * 60
-dinnerTime = 1 * 60
+lunchTime = 15 * 60
+dinnerTime = 10 * 60
 
 class timer:
     def __init__(self):
@@ -133,7 +133,7 @@ class timer:
         if self.isEatingTimerRunning == False:
             # Update focus timer on the screen
             if self.isPomodoroTimerRunning == True and self.isFocusTime == True:
-                self.focusTime -= 20
+                self.focusTime -= 1
                 self.pomodoroTimerMinutes, self.pomodoroTimerSeconds = divmod(self.focusTime, 60)
                 self.pomodoroTimerLabel.configure(text = "{:02d}:{:02d}".format(self.pomodoroTimerMinutes, self.pomodoroTimerSeconds))
                 
@@ -162,7 +162,7 @@ class timer:
 
             # Update break timer on the screen
             elif self.isPomodoroTimerRunning == True and self.isBreakTime == True:
-                self.breakTime -= 20
+                self.breakTime -= 1
                 self.pomodoroTimerMinutes, self.pomodoroTimerSeconds = divmod(self.breakTime, 60)
                 self.pomodoroTimerLabel.configure(text = "{:02d}:{:02d}".format(self.pomodoroTimerMinutes, self.pomodoroTimerSeconds))
 
@@ -222,7 +222,7 @@ class timer:
         if self.isEatingTimerRunning == True:
             self.isEatingTimerFirstTime = False
             
-            self.eatingTime -= 20
+            self.eatingTime -= 1
 
             # Reset this eating timer for later use when time's over
             if self.eatingTime == 0:
