@@ -7,13 +7,13 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
 
 # Assign pomodoro timer times
-focusTime = 35 * 60
-breakTime = 10 * 60
+focusTime = 2 * 60
+breakTime = 1 * 60
 pomodoroTimerCounter = 1
 
 # Assign eating timer times
-lunchTime = 15 * 60
-dinnerTime = 10 * 60
+lunchTime = 2 * 60
+dinnerTime = 1 * 60
 
 class timer:
     def __init__(self):
@@ -119,7 +119,7 @@ class timer:
         if self.isEatingTimerRunning == False:
             # Update focus timer on the screen
             if self.isPomodoroTimerRunning == True and self.isFocusTime == True:
-                self.focusTime -= 1
+                self.focusTime -= 20
                 self.pomodoroTimerMinutes, self.pomodoroTimerSeconds = divmod(self.focusTime, 60)
                 self.pomodoroTimerLabel.configure(text = "{:02d}:{:02d}".format(self.pomodoroTimerMinutes, self.pomodoroTimerSeconds))
                 
@@ -133,6 +133,7 @@ class timer:
                     self.window.state(newstate = "normal")
                     self.window.attributes("-topmost", True)
                     self.alertReturn = messagebox.showerror(message = "Check phone, exercise, read or get ahead on due stuff", type = "ok")
+                    self.window.attributes("-topmost", False)
                     
                     if(self.alertReturn == "ok"):
                         self.isFocusTime = False
@@ -147,7 +148,7 @@ class timer:
 
             # Update break timer on the screen
             elif self.isPomodoroTimerRunning == True and self.isBreakTime == True:
-                self.breakTime -= 1
+                self.breakTime -= 20
                 self.pomodoroTimerMinutes, self.pomodoroTimerSeconds = divmod(self.breakTime, 60)
                 self.pomodoroTimerLabel.configure(text = "{:02d}:{:02d}".format(self.pomodoroTimerMinutes, self.pomodoroTimerSeconds))
 
@@ -164,6 +165,7 @@ class timer:
                     self.window.state(newstate = "normal")
                     self.window.attributes("-topmost", True)
                     self.alertReturn = messagebox.showerror(message = "Let's focus", type = "ok")
+                    self.window.attributes("-topmost", False)
 
                     if(self.alertReturn == "ok"):
                         self.isFocusTime = True
@@ -203,7 +205,7 @@ class timer:
         if self.isEatingTimerRunning == True:
             self.isEatingTimerFirstTime = False
             
-            self.eatingTime -= 1
+            self.eatingTime -= 20
 
             # Reset this eating timer for later use when time's over
             if self.eatingTime == 0:
@@ -213,6 +215,7 @@ class timer:
                 self.window.state(newstate = "normal")
                 self.window.attributes("-topmost", True)
                 self.alertReturn = messagebox.showerror(message = "Stop what you're doing RIGHT NOW!")
+                self.window.attributes("-topmost", False)
 
                 if self.alertReturn == "ok":
                     self.resetEatingTimer()
