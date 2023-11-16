@@ -194,7 +194,7 @@ class timer:
         if self.isPomodoroTimerRunning == False and self.isEatingTimerRunning == False:
             self.window.state(newstate = "normal")
             self.window.attributes("-topmost", True)
-            messagebox.showerror(message = "Turn on DND and start a timer")
+            messagebox.showerror(message = "Start a timer")
             self.window.attributes("-topmost", False)
 
         self.window.after(60000, self.bother)
