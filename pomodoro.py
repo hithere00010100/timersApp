@@ -26,7 +26,7 @@ class timer:
         self.isBreakTime = False
         self.isFirstTimePressed = True
 
-        # Set initial conditions for lunch timer
+        # Set initial conditions for breakfast/dinner or lunch timer
         self.isLunchTimerRunning = False
         self.isFirstTimePressedLunch = True
 
@@ -71,8 +71,11 @@ class timer:
                                                     variable = self.switchState,
                                                     onvalue = True,
                                                     offvalue = False,
-                                                    command = self.setEatingTimer)
+                                                    command = self.resetLunchTimer)
         self.setEatingTimerSwitch.pack(pady = 5)
+        
+        # Initialize lunchTime or dinnerTime according to the switch state
+        self.resetLunchTimer()
         
         # Create reset lunch timer button
         self.resetLunchTimerButton = ctk.CTkButton(self.window, text = "Reset", command = self.resetLunchTimer)
@@ -211,7 +214,7 @@ class timer:
 
                 if self.lunchAlert == "ok":
                     # Reset breakfast, lunch or dinner timer
-                    self.setEatingTimer()
+                    self.resetLunchTimer()
 
             self.lunchMinutes, self.lunchSeconds = divmod(self.lunchTime, 60)
             self.lunchTimerLabel.configure(text = "{:02d}:{:02d}".format(self.lunchMinutes, self.lunchSeconds))
@@ -219,9 +222,6 @@ class timer:
         self.window.after(1000, self.updateLunchTimer)
 
     def resetLunchTimer(self):
-        self.lunchTime = lunchTime
-
-    def setEatingTimer(self):
         # Set eating time according to switch state
         if self.switchState.get() == True:
             self.lunchTime = notLunchTime
