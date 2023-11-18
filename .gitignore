@@ -1,2 +1,5 @@
 # Ignore this folder
 old/
+
+# Ignore this file
+main.py
