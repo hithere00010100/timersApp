@@ -42,7 +42,7 @@ class timer:
         self.pomodoroTimerLabel.pack(pady = 5)
 
         # Create and set up pomodoro timer counter label
-        self.pomodoroTimerCounterLabel = ctk.CTkLabel(self.window, text = "#")
+        self.pomodoroTimerCounterLabel = ctk.CTkLabel(self.window, text = "Turn on DND")
         self.pomodoroTimerCounterLabel.pack()
 
         # Create and set up pomodoro timer buttons frame (container)
@@ -99,6 +99,8 @@ class timer:
         
         else:
             self.isPomodoroTimerRunning = False
+            # Show DND reminder if timer is stopped
+            self.pomodoroTimerCounterLabel.configure(text = "Turn on DND")
     
     def resetPomodoroTimer(self):
         # Reinitialize pomodoro timer times
@@ -126,13 +128,14 @@ class timer:
     def updatePomodoroTimer(self):
         # Change pomodoro timer state to avoid double counting
         self.isPomodoroTimerFirstTime = False
-        # Replace "Start/stop" for the current pomodoro time
-        self.pomodoroTimerCounterLabel.configure(text = self.pomodoroTimerCounter)
         
         # Start pomodoro timer if eating timer is not running
         if self.isEatingTimerRunning == False:
             # Update focus timer on the screen
             if self.isPomodoroTimerRunning == True and self.isFocusTime == True:
+                # Update pomodoro counter every focus block only when timer is running
+                self.pomodoroTimerCounterLabel.configure(text = self.pomodoroTimerCounter)
+                
                 self.focusTime -= 1
                 self.pomodoroTimerMinutes, self.pomodoroTimerSeconds = divmod(self.focusTime, 60)
                 self.pomodoroTimerLabel.configure(text = "{:02d}:{:02d}".format(self.pomodoroTimerMinutes, self.pomodoroTimerSeconds))
