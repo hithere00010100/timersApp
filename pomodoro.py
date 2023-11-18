@@ -149,7 +149,7 @@ class timer:
                     # Show finish alert on the screen and set conditions for break timer
                     self.window.state(newstate = "normal")
                     self.window.attributes("-topmost", True)
-                    self.alertReturn = messagebox.showerror(message = "Check phone, exercise, read or get ahead on due stuff", type = "ok")
+                    self.alertReturn = messagebox.showerror(message = "Get up, check phone, read and exercise", type = "ok")
                     self.window.attributes("-topmost", False)
                     
                     if(self.alertReturn == "ok"):
